@@ -16,8 +16,8 @@
         selectedOrder: null,
         baseUrl: 'http://172.17.100.14:3326/santiago1',
         defaultImages: {
-            products: '/spa/assets/default-product-image.png',
-            avatars: '/spa/assets/default-avatar.png'
+            products:  'http://172.17.100.14:3326/santiago1/spa/assets/default-product-image.png',
+            avatars:  'http://172.17.100.14:3326/santiago1/spa/assets/default-avatar.png',
         },
         getImageUrl(item, type = 'products') {
             const imageField = type === 'products' ? 'image_url' : 'avatar';
@@ -32,25 +32,37 @@
                 const imagePath = item[imageField];
                 if (!imagePath) return defaultImage;
 
-                // Handle full URLs
+                // Handle full URLs - from display logic
                 if (imagePath.startsWith('http')) {
-                    return imagePath;
+                    // Use the same logic as product display
+                    try {
+                        const url = new URL(imagePath);
+                        const filename = url.pathname.split('/').pop();
+                        return `${this.baseUrl}/media/products/${filename}`;
+                    } catch (e) {
+                        console.error('Invalid image URL:', imagePath);
+                        return defaultImage;
+                    }
                 }
 
-                // Handle relative paths
-                const filename = imagePath.split('/').pop();
-                const mediaUrl = `${this.baseUrl}/media/avatars/${filename}`;
+                // Handle relative paths for avatars
+                if (type === 'avatars') {
+                    const filename = imagePath.split('/').pop();
+                    const mediaUrl = `${this.baseUrl}/media/avatars/${filename}`;
+                    
+                    // Add debug logging
+                    console.debug(`Loading ${type} image:`, {
+                        original: imagePath,
+                        processed: mediaUrl,
+                        item: item.name || 'unknown'
+                    });
+                    console.log('Constructed image URL:', mediaUrl);
+                    console.log('Avatar URL:', mediaUrl);
+                    
+                    return mediaUrl;
+                }
                 
-                // Add debug logging
-                console.debug(`Loading ${type} image:`, {
-                    original: imagePath,
-                    processed: mediaUrl,
-                    item: item.name || 'unknown'
-                });
-                console.log('Constructed image URL:', mediaUrl);
-                console.log('Avatar URL:', mediaUrl);
-                
-                return mediaUrl;
+                return defaultImage;
             } catch (error) {
                 console.error(`Error processing ${type} image:`, error);
                 return defaultImage;
