@@ -29,15 +29,6 @@
         <a class="item" @click.prevent="navigateTo('home/welcome')">Home</a>
         <a class="item" @click.prevent="navigateTo('about/about')">About</a>
        
-        <!-- Dropdown with Alpine.js -->
-        <div class="ui dropdown item" x-data="{ open: false }" @click="open = !open">
-            Contact <i class="dropdown icon"></i>
-            <div class="menu" x-show="open" @click.outside="open = false">
-                <a class="item" href="#" @click.prevent="navigateTo('contacts/contact_all'); open = false;">All Contacts</a>
-                <a class="item" href="#" @click.prevent="navigateTo('contacts/contact_add'); open = false;">Add Contact</a>
-            </div>
-        </div>
-       
         <!-- Chat Dropdown Menu - NEWLY ADDED -->
         <div class="ui dropdown item" x-data="{ open: false }" @click="open = !open">
             Product <i class="dropdown icon"></i>
