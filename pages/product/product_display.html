@@ -137,8 +137,10 @@
             border-bottom: 1px solid var(--border-color);
         }
         .product-image {
-            object-fit: cover;
-            object-position: center;
+            width: 100%;                  /* Make it fill the container width */
+            height: 200px;                /* Fixed height for uniformity */
+            object-fit: contain;          /* Maintain aspect ratio, no stretch */
+            object-position: center;      /* Center the image inside the box */
             transition: transform 0.3s ease;
         }
         .product-image:hover {
